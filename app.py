@@ -48,6 +48,9 @@ SUPPORTED_EXTENSIONS = {".pdf"}  # 支持的文件扩展名
 temp_files = {}
 temp_files_lock = threading.Lock()
 
+# 修改临时文件存储路径
+TEMP_DIR = "/tmp"  # 使用 /tmp 目录存储临时文件
+
 
 def cleanup_temp_files():
     """定期清理临时文件"""
@@ -98,11 +101,8 @@ def validate_file(file_obj) -> Tuple[bool, str]:
 
 def remove_pdf_restrictions(file_obj, progress=None) -> Tuple[Optional[str], str]:
     """移除PDF文件的限制并返回处理后的文件路径"""
-    temp_dir = None
+    temp_dir = tempfile.mkdtemp(dir=TEMP_DIR)  # 指定临时目录
     try:
-        # 创建临时文件夹
-        temp_dir = tempfile.mkdtemp()
-
         # 保存上传的文件
         original_filename = file_obj.name
         filename = os.path.basename(original_filename)
@@ -197,7 +197,7 @@ def create_zip_file(files: List[str]) -> Tuple[Optional[str], str]:
         # 创建临时ZIP文件
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         zip_filename = f"{timestamp}_unlocked_pdfs.zip"
-        zip_path = os.path.join(tempfile.gettempdir(), zip_filename)
+        zip_path = os.path.join(TEMP_DIR, zip_filename)  # 使用 TEMP_DIR
 
         # 创建ZIP文件
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
@@ -392,12 +392,17 @@ with gr.Blocks(
         outputs=[status_output, output_files, download_zip_btn, zip_download],
     )
 
-# 启动应用
+    @demo.load(api_name=False)
+    def health_check():
+        return "PDF Unlock Tool is running!"
+
+
+# 修改启动配置
 if __name__ == "__main__":
     demo.launch(
-        server_name="127.0.0.1",
-        server_port=7861,
         show_error=True,
         share=False,
-        show_api=False,  # 隐藏 API 使用标志
+        show_api=False,
+        server_name="0.0.0.0",
+        server_port=7860,
     )
