@@ -37,4 +37,4 @@ A simple and efficient tool to remove restrictions from PDF files. It allows you
 3. Install dependencies with: `pip install -r requirements.txt`
 4. Run the application with: `python app.py`
 
-The application will start and open in your default browser (default address: `http://127.0.0.1:7861`)
+The application will start and open in your default browser (default address: `http://127.0.0.1:7860`)
