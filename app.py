@@ -237,45 +237,16 @@ with gr.Blocks(
         primary_hue="blue",
         secondary_hue="slate",
     ),
-    css="""
-        .footer {display: none !important}
-        .container {max-width: 1000px; margin: auto;}
-        .gr-button {min-width: 160px;}
-        .warning {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        .info {
-            background-color: #e8f4fd;
-            color: #004085;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        .download-row {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            margin-top: 0.5rem;
-        }
-        """,
 ) as demo:
     gr.Markdown(
         """
-        <div style="text-align: center; margin-bottom: 2rem">
-
         # 📄 PDF 解锁工具
-
         ### 轻松移除 PDF 文件的各种使用限制
-        </div>
         """
     )
 
     with gr.Row():
-        with gr.Column(scale=1):
+        with gr.Column():
             files_input = gr.File(
                 label="📁 选择 PDF 文件（支持多选）",
                 file_types=[".pdf"],
@@ -283,12 +254,12 @@ with gr.Blocks(
             )
 
             with gr.Row():
-                process_btn = gr.Button("🚀 开始解锁", variant="primary", size="lg")
+                process_btn = gr.Button("🚀 开始解锁", variant="primary")
                 download_zip_btn = gr.Button(
-                    "📦 打包下载", variant="primary", size="lg", interactive=False
+                    "📦 打包下载", variant="primary", interactive=False
                 )
 
-        with gr.Column(scale=1):
+        with gr.Column():
             output_files = gr.Files(
                 label="📥 解锁后的文件（点击单个文件下载）",
                 interactive=False,
@@ -301,7 +272,7 @@ with gr.Blocks(
             )
 
     with gr.Row():
-        with gr.Column(scale=1):
+        with gr.Column():
             gr.Markdown(
                 """
                 ## 🔍 功能介绍
@@ -314,7 +285,7 @@ with gr.Blocks(
                 """
             )
 
-        with gr.Column(scale=1):
+        with gr.Column():
             gr.Markdown(
                 """
                 ## 📝 使用步骤
@@ -329,24 +300,18 @@ with gr.Blocks(
             )
 
     gr.Markdown(
-        """
+        f"""
         ## ⚠️ 使用须知
-        <div class="warning">
+        
         - 单个文件大小限制：{MAX_FILE_SIZE_MB}MB
         - 支持批量处理，最大并发数：{MAX_CONCURRENT_TASKS}
         - 本工具仅支持未加密的 PDF 文件（无法处理需要密码才能打开的文件）
-        </div>
         
-        <div class="info">
         💡 为了更好的性能，建议：
         - 确保上传的是有效的 PDF 格式文件
         - 文件大小不要超过限制
         - 批量处理时建议一次上传不超过10个文件
-        </div>
-        """.format(
-            MAX_FILE_SIZE_MB=MAX_FILE_SIZE_MB,
-            MAX_CONCURRENT_TASKS=MAX_CONCURRENT_TASKS,
-        )
+        """
     )
 
     def process_and_update(files):
